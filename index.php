@@ -20,14 +20,14 @@ class Game {
     \n
     EOM;
 
-    $number = $this->listen('対戦相手の人数（1〜4人）を入力してください');
+    $number = $this->listenNumber('対戦相手の人数（1〜4人）を入力してください');
 
     if(!$number){
       echo '1~4の数字を入力してください。';
       return;
     }
 
-    $gameCount = $this->listen('ゲームを何周するか1以上の数字で入力してください。例: 6など');
+    $gameCount = $this->listenCount('ゲームを何周するか1以上の数字で入力してください。例: 6など');
 
     if(!$gameCount) {
       echo '1以上の数字を入力してください。';
@@ -39,7 +39,8 @@ class Game {
       $opponent = $this->opponent($number,$count);
       $answer = $this->answer();
       $fizzBuzz = $this->fizzBuzz($opponent);
-      if($answer == $fizzBuzz) {
+
+      if($answer === $fizzBuzz) {
         $count++;
         echo "正解";
         echo "\n";
@@ -53,7 +54,7 @@ class Game {
 
   }
 
-  public function listen(string $message){
+  public function listenNumber(string $message){
     $input = $this->ask($message);
 
     //全角を半角に直す。
@@ -62,12 +63,31 @@ class Game {
     if(!is_numeric($value)){
       return false;
     }
+
     // 強制的に整数にします。　
     $number = (int)$value;
 
     if(5 <= $number) {
       return false;
     }
+
+    return $number;
+  }
+
+
+  public function listenCount(string $message){
+    $input = $this->ask($message);
+
+    //全角を半角に直す。
+    $value = mb_convert_kana($input, 'n');
+
+    if(!is_numeric($value)){
+      return false;
+    }
+
+    // 強制的に整数にします。　
+    $number = (int)$value;
+
     return $number;
   }
 
@@ -75,9 +95,8 @@ class Game {
   public function ask(string $message) {
     // 標準入力
     echo escapeshellcmd($message);
-    return trim(fgets(STDIN));
-
     //stdinはstandard inputの略。
+    return trim(fgets(STDIN));
   }
 
   public function answer() {
@@ -94,8 +113,9 @@ class Game {
     }
     elseif($i % 5 === 0) {
       return 'Buzz';
-    }else{
-      return $i;
+    }
+    else{
+      return strval($i);
     }
   }
 
@@ -104,6 +124,7 @@ class Game {
       if($i < ($number+1)*($count+1)-$number) {
         continue;
       }
+
       $fizzBuzz = $this->fizzBuzz($i);
       echo $fizzBuzz;
       echo "\n";
@@ -112,7 +133,4 @@ class Game {
     return $i;
   }
 }
-
-
-
 ?>
