@@ -57,7 +57,7 @@ class Game {
   public function listenNumber(string $message){
     $input = $this->ask($message);
 
-    //全角を半角に直す。
+    // 全角を半角に直す。
     $value = mb_convert_kana($input, 'n');
 
     if(!is_numeric($value)){
